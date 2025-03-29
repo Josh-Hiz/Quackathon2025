@@ -5,22 +5,47 @@ import CameraView from './components/CameraView';
 
 const { height } = Dimensions.get('window');
 
+type AppState = 'START' | 'PHOTO_TAKEN' | 'SENT_TO_CHATGPT' | 'SENT_TEXT';
+
 const App = () => {
-  const [photoTaken, setPhotoTaken] = useState(false);
-  const [emsDescription, setEmsDescription] = useState('');
+  const startString = 'Take a picture to send to EMS!'
+  const [appState, setAppState] = useState<AppState>('START');
+  const [emsDescription, setEmsDescription] = useState(startString);
   const colorScheme = Appearance.getColorScheme();
 
   const handleTakePhoto = () => {
-    setPhotoTaken(true);
+    setAppState('PHOTO_TAKEN');
   };
 
   const handleSend = async () => {
-    if (photoTaken) {
+    if (appState === 'PHOTO_TAKEN') {
+      setAppState('SENT_TO_CHATGPT');
+      // Simulate API call to ChatGPT
       const generatedDescription = "This is a generated EMS description from OpenAI.";
       setEmsDescription(generatedDescription);
     }
   };
-  console.log(colorScheme)
+
+  const handleText = () => {
+    if (appState === 'SENT_TO_CHATGPT') {
+      setAppState('SENT_TEXT');
+      // Here you would actually send the text to the phone number
+    }
+  };
+
+  const handleRegen = () => {
+    if (appState === 'SENT_TO_CHATGPT') {
+      // Simulate regenerating the description
+      const regeneratedDescription = "This is a regenerated EMS description from OpenAI.";
+      setEmsDescription(regeneratedDescription);
+    }
+  };
+
+  const handleReset = () => {
+    setAppState('START');
+    setEmsDescription(startString);
+  };
+
   return (
     <View style={colorScheme === 'dark' ? styles.containerDark : styles.containerLight}>
       <CameraView />
@@ -29,7 +54,16 @@ const App = () => {
           {emsDescription || "EMS Description Here"}
         </Text>
       </View>
-      <InputBar onTakePhoto={handleTakePhoto} onSend={handleSend} photoTaken={photoTaken} />
+
+      <InputBar
+        appState={appState}
+        onTakePhoto={handleTakePhoto}
+        onSend={handleSend}
+        onText={handleText}
+        onRegen={handleRegen}
+        onReset={handleReset}
+        colorScheme={colorScheme}
+      />
     </View>
   );
 };
