@@ -9,7 +9,7 @@ interface InputBarProps {
   onText: () => void;
   onRegen: () => void;
   onReset: () => void;
-  colorScheme: 'light' | 'dark' | null;
+  colorScheme: string | null | undefined;
 }
 
 const InputBar: React.FC<InputBarProps> = ({
@@ -21,9 +21,7 @@ const InputBar: React.FC<InputBarProps> = ({
   onReset,
   colorScheme,
 }) => {
-  const iconColor = colorScheme === 'dark' ? 'white' : 'black';
-  const disabledColor = colorScheme === 'dark' ? 'gray' : 'lightgray';
-
+  const iconColor = colorScheme === 'dark' ? 'white' : 'lightgrey';
   return (
     <View style={colorScheme === 'dark' ? styles.inputContainerDark : styles.inputContainerLight}>
       {/* START state buttons */}
