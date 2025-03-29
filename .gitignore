@@ -1,0 +1,8 @@
+# MAC
+.DS_Store
+
+# Node.js
+node_modules/
+package-lock.json
+
+# Add more later
