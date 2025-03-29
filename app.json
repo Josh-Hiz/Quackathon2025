@@ -14,13 +14,17 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.company.Quackathon2025"
+      "bundleIdentifier": "com.company.Quackathon2025",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera for usage in our Hackathon project to take pictures."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.company.Quackathon2025"
     },
     "web": {
       "favicon": "./assets/favicon.png"
