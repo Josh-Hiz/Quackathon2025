@@ -4,9 +4,10 @@
   "main": "index.ts",
   "scripts": {
     "start": "expo start --tunnel",
-    "android": "expo start --android --tunnel",
     "ios": "expo start --ios --tunnel",
-    "web": "expo start --web --tunnel"
+    "web": "expo start --web --tunnel",
+    "build-ios-local-dev": "npx expo run:ios",
+    "build-ios-local-prod": "npx expo run:ios --configuration Release"
   },
   "dependencies": {
     "@expo/metro-runtime": "~4.0.1",
