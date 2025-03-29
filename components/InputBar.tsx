@@ -1,62 +1,58 @@
 import React from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, useColorScheme } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface InputBarProps {
-    onTakePhoto: () => void;
-    onSend: () => void;
-    photoTaken: boolean;
-    description: string;
-    setDescription: (text: string) => void;
-  }
+  onTakePhoto: () => void;
+  onSend: () => void;
+  photoTaken: boolean;
+}
 
-const InputBar: React.FC<InputBarProps> = ({ onTakePhoto, onSend, photoTaken, description, setDescription }) => {
-    return (
-    <View style={styles.inputContainer}>
+const InputBar: React.FC<InputBarProps> = ({ onTakePhoto, onSend, photoTaken }) => {
+  const colorScheme = useColorScheme();
+  const iconColor = colorScheme === 'dark' ? 'white' : 'black';
+  const disabledColor = colorScheme === 'dark' ? 'gray' : 'lightgray';
+
+  return (
+    <View style={colorScheme === 'dark' ? styles.inputContainerDark : styles.inputContainerLight}>
       {/* Take Photo Button */}
-      <TouchableOpacity onPress={onTakePhoto} style={styles.iconButton}>
-        <Ionicons name="camera" size={24} color="black" />
+      <TouchableOpacity onPress={onTakePhoto} style={styles.button}>
+        <Ionicons name="camera" size={32} color={iconColor} />
       </TouchableOpacity>
 
-      {/* EMS Description Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="EMS Description Here"
-        value={description}
-        onChangeText={setDescription}
-      />
-
       {/* Send Button (Disabled if no photo) */}
-      <TouchableOpacity onPress={onSend} style={[styles.iconButton, !photoTaken && styles.disabledButton]} disabled={!photoTaken}>
-        <Ionicons name="send" size={24} color={!photoTaken ? "gray" : "black"} />
+      <TouchableOpacity onPress={onSend} style={[styles.button, !photoTaken && styles.disabledButton]} disabled={!photoTaken}>
+        <Ionicons name="send" size={32} color={!photoTaken ? disabledColor : iconColor} />
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  inputContainer: {
+  inputContainerLight: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
+    padding: 5,
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderColor: '#ddd',
   },
-  iconButton: {
+  inputContainerDark: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 5,
+    backgroundColor: '#121212',
+    borderTopWidth: 1,
+    borderColor: '#444',
+  },
+  button: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 10,
   },
   disabledButton: {
     opacity: 0.5,
-  },
-  input: {
-    flex: 1,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 20,
-    marginHorizontal: 10,
-    backgroundColor: '#fff',
   },
 });
 
