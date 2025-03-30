@@ -1,21 +1,20 @@
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { useRef, useState } from 'react';
-import { Button, StyleSheet, Text, View, Image } from 'react-native';
-import { useAppContext } from './AppContext';
+import { Button, StyleSheet, View, Image } from 'react-native';
+import { useAppContext } from '../AppContext';
+
+
+const make_photo = async () => {
+  const { set_uri } = useAppContext();
+  const photo = await cameraRef.current.takePictureAsync();
+  set_uri(photo.uri);
+}
 
 const CameraComponent: React.FC = () => {
-  const { appState, photoUri, setPhotoUri, setAppState } = useAppContext();
+  const { current_state, current_uri, take_photo } = useAppContext();
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView>(null);
-
-  const takePhoto = async () => {
-    if (cameraRef.current && appState === 'START') {
-      const photo = await cameraRef.current.takePictureAsync();
-      setPhotoUri(photo.uri);
-      setAppState('PHOTO_TAKEN');
-    }
-  };
 
   if (!permission) return <View />;
   if (!permission.granted) {
@@ -27,14 +26,21 @@ const CameraComponent: React.FC = () => {
     );
   }
 
+  if (current_state !== 'START' && current_uri) {
+    return (
+      <View style={styles.container}>
+        <Image source={{ uri: current_uri }} style={styles.camera} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      {appState === 'PHOTO_TAKEN' && photoUri ? (
-        <Image source={{ uri: photoUri }} style={styles.camera} />
-      ) : (
-        <CameraView ref={cameraRef} style={styles.camera} facing={facing} />
-      )}
-      <Button title="Take Photo" onPress={takePhoto} />
+      <CameraView
+        ref={cameraRef}
+        style={styles.camera}
+        facing={facing}
+      />
     </View>
   );
 };
@@ -53,4 +59,6 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CameraComponent;
+const exports = { CameraComponent, make_photo };
+
+export default exports;

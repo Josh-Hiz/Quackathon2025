@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions, Appearance } from 'react-native';
-import { AppProvider, useAppContext } from './components/AppContext';
+import { AppProvider, useAppContext } from './AppContext';
 import InputBar from './components/InputBar';
 import CameraView from './components/CameraView';
 
 const { height } = Dimensions.get('window');
 
 const MainApp = () => {
-  const { appState, photoUri, chatResponse } = useAppContext();
+  const { current_state, current_gpt_response } = useAppContext();
   const colorScheme = Appearance.getColorScheme();
 
   return (
@@ -16,7 +16,7 @@ const MainApp = () => {
 
       <View style={colorScheme === 'dark' ? styles.descriptionContainerDark : styles.descriptionContainerLight}>
         <Text style={colorScheme === 'dark' ? styles.descriptionTextDark : styles.descriptionTextLight}>
-          {chatResponse || "EMS Description Here"}
+          {"TEXT TO DISPLAY: choose current_gpt_response only in the last two states."}
         </Text>
       </View>
 
@@ -71,5 +71,3 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
 });
-
-export default App;
