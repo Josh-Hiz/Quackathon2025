@@ -48,7 +48,7 @@ const App = () => {
 
   return (
     <View style={colorScheme === 'dark' ? styles.containerDark : styles.containerLight}>
-      <CameraView />
+      <CameraView/>
       <View style={colorScheme === 'dark' ? styles.descriptionContainerDark : styles.descriptionContainerLight}>
         <Text style={colorScheme === 'dark' ? styles.descriptionTextDark : styles.descriptionTextLight}>
           {emsDescription || "EMS Description Here"}
