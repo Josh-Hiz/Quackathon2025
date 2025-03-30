@@ -1,20 +1,12 @@
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
-import { useRef, useState } from 'react';
-import { Button, StyleSheet, View, Image } from 'react-native';
+import { forwardRef, useRef, useState } from 'react';
+import { Button, StyleSheet, View, Image, Text } from 'react-native';
 import { useAppContext } from '../AppContext';
 
-
-const make_photo = async () => {
-  const { set_uri } = useAppContext();
-  const photo = await cameraRef.current.takePictureAsync();
-  set_uri(photo.uri);
-}
-
-const CameraComponent: React.FC = () => {
-  const { current_state, current_uri, take_photo } = useAppContext();
+const CameraComponent = forwardRef((props, ref) => {
+  const { current_state, current_uri, set_uri } = useAppContext();
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
-  const cameraRef = useRef<CameraView>(null);
 
   if (!permission) return <View />;
   if (!permission.granted) {
@@ -37,13 +29,13 @@ const CameraComponent: React.FC = () => {
   return (
     <View style={styles.container}>
       <CameraView
-        ref={cameraRef}
+        ref={ref}
         style={styles.camera}
         facing={facing}
       />
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -59,6 +51,4 @@ const styles = StyleSheet.create({
   }
 });
 
-const exports = { CameraComponent, make_photo };
-
-export default exports;
+export default CameraComponent;

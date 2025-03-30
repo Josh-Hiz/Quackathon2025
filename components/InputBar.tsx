@@ -1,11 +1,11 @@
-import React from 'react';
+import { forwardRef, useRef, useState } from 'react';
 import { Appearance, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppContext } from '../AppContext';
-import { exports } from './CameraView'
 
-const InputBar: React.FC = () => {
+const InputBar = forwardRef((props, ref) => {
   const {
+    set_uri,
     current_state,
     take_photo,
     send_to_gpt,
@@ -17,11 +17,18 @@ const InputBar: React.FC = () => {
   const iconColor = colorScheme === 'dark' ? 'white' : 'black';
   const disabledColor = colorScheme === 'dark' ? 'gray' : 'lightgray';
 
+  const make_photo = async () => {
+    const photo = await ref.current.takePictureAsync();
+    set_uri(photo.uri);
+    console.log(photo.uri);
+    take_photo();
+  }
+
   return (
     <View style={colorScheme === 'dark' ? styles.inputContainerDark : styles.inputContainerLight}>
       {/* START state */}
       {current_state === 'START' && (
-        <TouchableOpacity onPress={exports.make_photo} style={styles.button}>
+        <TouchableOpacity onPress={make_photo} style={styles.button}>
           <Ionicons name="camera" size={32} color={iconColor} />
         </TouchableOpacity>
       )}
@@ -61,7 +68,7 @@ const InputBar: React.FC = () => {
       )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   inputContainerLight: {

@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
 
 interface AppContextType {
+  // current_cam_perms: PermissionResponse | null;
+  // set_cam_perms: (perms: PermissionResponse | null) => void;
   current_uri: string | null;
   set_uri: (uri: string | null) => void;
   current_state: 'START' | 'PHOTO_TAKEN' | 'SENT_TO_CHATGPT' | 'SENT_TEXT';
@@ -19,6 +21,7 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // const [current_cam_perms, set_cam_perms] = useState<PermissionResponse | null>(null);
   const [current_uri, set_uri] = useState<string | null>(null);
   const [current_state, set_state] = useState<'START' | 'PHOTO_TAKEN' | 'SENT_TO_CHATGPT' | 'SENT_TEXT'>('START');
   const [current_emergency_type, set_emergency_type] = useState<string | null>(null);

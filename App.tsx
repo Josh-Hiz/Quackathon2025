@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useRef } from 'react';
 import { View, Text, StyleSheet, Dimensions, Appearance } from 'react-native';
 import { AppProvider, useAppContext } from './AppContext';
 import InputBar from './components/InputBar';
@@ -7,20 +7,21 @@ import CameraView from './components/CameraView';
 const { height } = Dimensions.get('window');
 
 const MainApp = () => {
+  const cameraRef = useRef(null);
   const { current_state, current_gpt_response } = useAppContext();
   const colorScheme = Appearance.getColorScheme();
 
   return (
     <View style={colorScheme === 'dark' ? styles.containerDark : styles.containerLight}>
-      <CameraView />
+      <CameraView ref={cameraRef} />
 
       <View style={colorScheme === 'dark' ? styles.descriptionContainerDark : styles.descriptionContainerLight}>
         <Text style={colorScheme === 'dark' ? styles.descriptionTextDark : styles.descriptionTextLight}>
-          {"TEXT TO DISPLAY: choose current_gpt_response only in the last two states."}
+          {}
         </Text>
       </View>
 
-      <InputBar />
+      <InputBar ref={cameraRef} />
     </View>
   );
 };
