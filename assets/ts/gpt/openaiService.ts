@@ -1,17 +1,12 @@
-import { OpenAI } from "openai"
-import * as SecureStore from "expo-secure-store"
-
-const openaiApiKey: string = process.env.OPENAI_API_KEY
+import { OpenAI } from 'openai';
 
 let openaiClient: OpenAI | null = null;
 
 export const getOpenAIClient = async () => {
-    if(openaiClient) return openaiClient
-    let apiKey = await SecureStore.getItemAsync("KEY")
-    if(!apiKey){
-        apiKey = openaiApiKey
-        await SecureStore.setItemAsync("KEY", apiKey)
-    }
-    openaiClient = new OpenAI()
-    return openaiClient
-}
+	if (openaiClient) return openaiClient;
+	openaiClient = new OpenAI({
+		baseURL: process.env.EXPO_PUBLIC_DEEPSEEK_BASE_URL,
+		apiKey: process.env.EXPO_PUBLIC_DEEPSEEK_API_KEY,
+	});
+	return openaiClient;
+};

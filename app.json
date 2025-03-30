@@ -17,7 +17,10 @@
       "bundleIdentifier": "com.company.Quackathon2025",
       "userInterfaceStyle": "automatic",
       "infoPlist": {
-        "NSCameraUsageDescription": "This app uses the camera for usage in our Hackathon project to take pictures."
+        "NSCameraUsageDescription": "This app uses the camera for usage in our Hackathon project to take pictures.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "App requires geolocation to improve the quality of the service",
+        "NSLocationAlwaysUsageDescription": "App requires geolocation to improve the quality of the service",
+        "NSLocationWhenInUseUsageDescription": "App requires geolocation to improve the quality of the service"
       }
     },
     "android": {

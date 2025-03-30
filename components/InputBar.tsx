@@ -1,9 +1,10 @@
-import { forwardRef, useRef, useState } from 'react';
+import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
+import { forwardRef, useRef, useImperativeHandle, useState } from 'react';
 import { Appearance, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppContext } from '../AppContext';
 
-const InputBar = forwardRef((props, ref) => {
+const InputBar = forwardRef((props, forwardedRef) => {
   const {
     set_uri,
     current_state,
@@ -15,13 +16,16 @@ const InputBar = forwardRef((props, ref) => {
   } = useAppContext();
   const colorScheme = Appearance.getColorScheme();
   const iconColor = colorScheme === 'dark' ? 'white' : 'black';
-  const disabledColor = colorScheme === 'dark' ? 'gray' : 'lightgray';
-
+  
   const make_photo = async () => {
-    const photo = await ref.current.takePictureAsync();
-    set_uri(photo.uri);
-    console.log(photo.uri);
-    take_photo();
+    if(forwardedRef && forwardedRef.current){
+      const photo = await forwardedRef.current.takePictureAsync();
+      if(photo) {
+        set_uri(photo.uri);
+        take_photo();
+      }
+    }
+
   }
 
   return (
