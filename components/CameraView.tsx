@@ -1,46 +1,56 @@
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
-import { useState } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { useRef, useState } from 'react';
+import { Button, StyleSheet, Text, View, Image } from 'react-native';
+import { useAppContext } from './AppContext';
 
-const cameraComponent = () => { 
-    const [facing, setFacing] = useState<CameraType>('back');
-    const [permission, requestPermission] = useCameraPermissions();
-  
-    if (!permission) {
-      // Camera permissions are still loading.
-      return <View />;
+const CameraComponent: React.FC = () => {
+  const { appState, photoUri, setPhotoUri, setAppState } = useAppContext();
+  const [facing, setFacing] = useState<CameraType>('back');
+  const [permission, requestPermission] = useCameraPermissions();
+  const cameraRef = useRef<CameraView>(null);
+
+  const takePhoto = async () => {
+    if (cameraRef.current && appState === 'START') {
+      const photo = await cameraRef.current.takePictureAsync();
+      setPhotoUri(photo.uri);
+      setAppState('PHOTO_TAKEN');
     }
-  
-    if (!permission.granted) {
-      // Camera permissions are not granted yet.
-      return (
-        <View style={styles.container}>
-          <Text style={styles.message}>We need your permission to show the camera</Text>
-          <Button onPress={requestPermission} title="grant permission" />
-        </View>
-      );
-    }
-  
+  };
+
+  if (!permission) return <View />;
+  if (!permission.granted) {
     return (
       <View style={styles.container}>
-        <CameraView style={styles.camera} facing={facing}>
-        </CameraView>
+        <Text style={styles.message}>We need your permission to show the camera</Text>
+        <Button onPress={requestPermission} title="Grant Permission" />
       </View>
     );
   }
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-    },
-    message: {
-      textAlign: 'center',
-      paddingBottom: 10,
-    },
-    camera: {
-      flex: 1,
-    }
-  });
 
-export default cameraComponent
+  return (
+    <View style={styles.container}>
+      {appState === 'PHOTO_TAKEN' && photoUri ? (
+        <Image source={{ uri: photoUri }} style={styles.camera} />
+      ) : (
+        <CameraView ref={cameraRef} style={styles.camera} facing={facing} />
+      )}
+      <Button title="Take Photo" onPress={takePhoto} />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  message: {
+    textAlign: 'center',
+    paddingBottom: 10,
+  },
+  camera: {
+    flex: 1,
+  }
+});
+
+export default CameraComponent;
