@@ -39,3 +39,7 @@ yarn-error.*
 
 # build
 ios
+
+# Python
+.venv/
+venv/
