@@ -14,7 +14,6 @@ const MainApp = () => {
   return (
     <View style={colorScheme === 'dark' ? styles.containerDark : styles.containerLight}>
       <CameraView ref={cameraRef} />
-
       <View style={colorScheme === 'dark' ? styles.descriptionContainerDark : styles.descriptionContainerLight}>
         <Text style={colorScheme === 'dark' ? styles.descriptionTextDark : styles.descriptionTextLight}>
           {}
@@ -72,3 +71,4 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
 });
+
