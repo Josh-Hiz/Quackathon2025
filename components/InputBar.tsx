@@ -1,72 +1,74 @@
-import React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { forwardRef, useRef, useState } from 'react';
+import { Appearance, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useAppContext } from '../AppContext';
 
-interface InputBarProps {
-  appState: 'START' | 'PHOTO_TAKEN' | 'SENT_TO_CHATGPT' | 'SENT_TEXT';
-  onTakePhoto: () => void;
-  onSend: () => void;
-  onText: () => void;
-  onRegen: () => void;
-  onReset: () => void;
-  colorScheme: string | null | undefined;
-}
+const InputBar = forwardRef((props, ref) => {
+  const {
+    set_uri,
+    current_state,
+    take_photo,
+    send_to_gpt,
+    regen_gpt,
+    send_text,
+    reset
+  } = useAppContext();
+  const colorScheme = Appearance.getColorScheme();
+  const iconColor = colorScheme === 'dark' ? 'white' : 'black';
+  const disabledColor = colorScheme === 'dark' ? 'gray' : 'lightgray';
 
-const InputBar: React.FC<InputBarProps> = ({
-  appState,
-  onTakePhoto,
-  onSend,
-  onText,
-  onRegen,
-  onReset,
-  colorScheme,
-}) => {
-  const iconColor = colorScheme === 'dark' ? 'white' : 'lightgrey';
+  const make_photo = async () => {
+    const photo = await ref.current.takePictureAsync();
+    set_uri(photo.uri);
+    console.log(photo.uri);
+    take_photo();
+  }
+
   return (
     <View style={colorScheme === 'dark' ? styles.inputContainerDark : styles.inputContainerLight}>
-      {/* START state buttons */}
-      {appState === 'START' && (
-        <TouchableOpacity onPress={onTakePhoto} style={styles.button}>
+      {/* START state */}
+      {current_state === 'START' && (
+        <TouchableOpacity onPress={make_photo} style={styles.button}>
           <Ionicons name="camera" size={32} color={iconColor} />
         </TouchableOpacity>
       )}
 
-      {/* PHOTO_TAKEN state buttons */}
-      {appState === 'PHOTO_TAKEN' && (
+      {/* PHOTO_TAKEN state */}
+      {current_state === 'PHOTO_TAKEN' && (
         <>
-          <TouchableOpacity onPress={onReset} style={styles.button}>
+          <TouchableOpacity onPress={reset} style={styles.button}>
             <Ionicons name="refresh" size={32} color={iconColor} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={onSend} style={styles.button}>
+          <TouchableOpacity onPress={send_to_gpt} style={styles.button}>
             <Ionicons name="send" size={32} color={iconColor} />
           </TouchableOpacity>
         </>
       )}
 
       {/* SENT_TO_CHATGPT state buttons */}
-      {appState === 'SENT_TO_CHATGPT' && (
+      {current_state === 'SENT_TO_CHATGPT' && (
         <>
-          <TouchableOpacity onPress={onReset} style={styles.button}>
+          <TouchableOpacity onPress={reset} style={styles.button}>
             <Ionicons name="refresh" size={32} color={iconColor} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={onRegen} style={styles.button}>
+          <TouchableOpacity onPress={regen_gpt} style={styles.button}>
             <Ionicons name="reload" size={32} color={iconColor} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={onText} style={styles.button}>
+          <TouchableOpacity onPress={send_text} style={styles.button}>
             <Ionicons name="chatbox" size={32} color={iconColor} />
           </TouchableOpacity>
         </>
       )}
 
-      {/* SENT_TEXT state buttons - Only reset available */}
-      {appState === 'SENT_TEXT' && (
-        <TouchableOpacity onPress={onReset} style={styles.button}>
+      {/* SENT_TEXT state */}
+      {current_state === 'SENT_TEXT' && (
+        <TouchableOpacity onPress={reset} style={styles.button}>
           <Ionicons name="refresh" size={32} color={iconColor} />
         </TouchableOpacity>
       )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   inputContainerLight: {
